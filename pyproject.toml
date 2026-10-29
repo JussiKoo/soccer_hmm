@@ -1,0 +1,32 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "soccer_hmm"
+version = "0.0.1"
+description = "Soccer players external load profile analysis with HMM's"
+authors = [
+  { name = "Jussi Kauppinen" },
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License"
+]
+requires-python = "~=3.12"
+
+
+[tool.ruff]
+line-length = 99
+src = ["soccer_hmm"]
+include = ["pyproject.toml", "soccer_hmm/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["soccer_hmm"]
+force-sort-within-sections = true
+

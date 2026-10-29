@@ -1,0 +1,26 @@
+name: hmm
+channels:
+  - conda-forge
+dependencies:
+  - python=3.14
+  - pip
+  - typer
+  - loguru
+  - tqdm
+  - ruff
+  - pytest
+  - numpy=2.3.5
+  - pandas=2.3.3
+  - scipy=1.17.0
+  - matplotlib=3.11.1
+  - seaborn=0.13.2
+  - cmdstanpy=1.3.0
+  - ipykernel=7.1.0
+  - tqdm=4.67.1
+  - arviz=0.23.0
+  - arviz-stats=1.2.0
+  - scienceplots=2.2.2
+  - pip:
+    - python-dotenv
+    - mkdocs
+    - -e .
