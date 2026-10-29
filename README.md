@@ -4,7 +4,7 @@
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-Soccer players external load profile analysis with HMM's
+Soccer players external load profile analysis with hidden Markov models
 
 ## Getting Started
 
