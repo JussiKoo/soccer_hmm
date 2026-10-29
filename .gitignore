@@ -1,6 +1,5 @@
 *.dvi
 *.aux
-*.pdf
 *.log
 *.toc
 *.lot
@@ -17,9 +16,6 @@
 *.@@@
 *.synctex.gz
 *.snm
-
-# experiments and models
-/soccer_hmm_project/models
 
 
 
