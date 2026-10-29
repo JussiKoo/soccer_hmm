@@ -6,26 +6,49 @@
 
 Soccer players external load profile analysis with HMM's
 
-Currently running an HMM experiment works as follows:
+## Getting Started
 
-1. Create and activate the conda environment:
-    conda create --file environment.yml
-    conda activate hmm
-3. Raw data files are in the "data/raw" directory as .CSV files (-raw_data_path)
-4. Stan model is in the "stan" directory (-stan_path)
-5. "models" directory contains a directory in which the config.yaml exists (-model_path)
-   Example of config.yaml:
-       model:
-         name: soccer_hmm
-         n_states: 5
-       sampling:
-         chains: 4
-         iter_warmup: 1000
-         iter_sampling: 1000
-         adapt_delta: 0.9
-       rng_seed: 42
-6. Run the experiment from the project root:
-   python -m run_experiment.py -raw_data_path "data/raw/your_data" -stan_path "stan/soccer_hmm_2.stan" -model_path "models/your_model"
+### 1. Set up the environment
+
+```bash
+conda env create -f environment.yml
+conda activate hmm
+```
+
+### 2. Project layout
+
+| Path | Contents | CLI argument |
+|------|----------|--------------|
+| `data/raw/` | Raw data files (`.csv`) | `-raw_data_path` |
+| `stan/` | Stan model files | `-stan_path` |
+| `models/<your_model>/` | Directory containing a `config.yaml` | `-model_path` |
+
+### 3. Configure the model
+
+Each directory under `models/` needs a `config.yaml`. Example:
+
+```yaml
+model:
+  name: soccer_hmm
+  n_states: 5
+sampling:
+  chains: 4
+  iter_warmup: 1000
+  iter_sampling: 1000
+  adapt_delta: 0.9
+rng_seed: 42
+```
+
+### 4. Run an experiment
+
+From the project root:
+
+```bash
+python run_experiment.py \
+  -raw_data_path "data/raw/your_data" \
+  -stan_path "stan/soccer_hmm_2.stan" \
+  -model_path "models/your_model"
+```
 
 ## Project Organization
 
