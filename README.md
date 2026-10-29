@@ -31,9 +31,9 @@ Currently running an HMM experiment works as follows:
     ├── dataset.py              <- Contains functions for preprocessing the raw data
     ├── plots.py                <- Contains functions for plotting
     ├── modeling
-    |   │        
-    │   ├── model_checks.py      <- Contains functions for the model checks       
-    │   └── sample.py            <- Contains functions to initialize and run the mcmc sampling
+        │        
+        ├── model_checks.py      <- Contains functions for the model checks       
+        └── sample.py            <- Contains functions to initialize and run the mcmc sampling
 ```
 
 --------
