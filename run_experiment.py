@@ -43,7 +43,7 @@ def main(
     load_chains: bool = False
     # -----------------------------------------
 ):
-
+    # For generating correct size plots for the thesis
     plt.style.use(["science"])
     textwidth = 6.10356
     aspect_ratio = 1/3

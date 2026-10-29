@@ -1,0 +1,11 @@
+model:
+  name: soccer_hmm
+  n_states: 5
+
+sampling:
+  chains: 4
+  iter_warmup: 1000
+  iter_sampling: 1000
+  adapt_delta: 0.9
+
+rng_seed: 42
