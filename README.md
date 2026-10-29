@@ -20,6 +20,7 @@ Currently running an HMM experiment works as follows:
 │   └── raw            <- The original, immutable data dump.
 ├── models             <- MCMC sampling results for the experiments
 ├── notebooks          <- Jupyter notebooks
+├── stan               <- Stan code files
 ├── pyproject.toml     <- Project configuration file with package metadata for soccer_hmm and configuration for tools like black
 ├── environment.yml    <- The requirements file for reproducing the analysis environment
 ├── run_experiment.py  <- The script to run a single HMM experiment using the configurations in the models directory
