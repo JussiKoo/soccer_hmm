@@ -6,53 +6,34 @@
 
 Soccer players external load profile analysis with HMM's
 
+Currently running an HMM experiment works as follows:
+
+1. Raw data files are in the raw-directory as .CSV files
+
 ## Project Organization
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
 ├── README.md          <- The top-level README for developers using this project.
 ├── data
 │   ├── processed      <- The final, canonical data sets for modeling.
 │   └── raw            <- The original, immutable data dump.
-│
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
-│
-├── models             <- Trained and serialized models, model predictions, or model summaries
-│
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
-│
-├── pyproject.toml     <- Project configuration file with package metadata for 
-│                         soccer_hmm and configuration for tools like black
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-├── setup.cfg          <- Configuration file for flake8
-│
-└── soccer_hmm   <- Source code for use in this project.
+├── models             <- MCMC sampling results for the experiments
+├── notebooks          <- Jupyter notebooks
+├── stan               <- Stan code files
+├── pyproject.toml     <- Project configuration file with package metadata for soccer_hmm and configuration for tools like black
+├── environment.yml    <- The requirements file for reproducing the analysis environment
+├── run_experiment.py  <- The script to run a single HMM experiment using the configurations in the models directory
+└── src/soccer_hmm   <- Source code for use in this project.
     │
     ├── __init__.py             <- Makes soccer_hmm a Python module
-    │
     ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── inference.py         <- Code to run model inference with trained models          
-    │   └── sample.py            <- Code to run the mcmc sampling
-    │
-    └── plots.py                <- Code to create visualizations
+    ├── dataset.py              <- Contains functions for preprocessing the raw data
+    ├── plots.py                <- Contains functions for plotting
+    ├── modeling
+    |   │        
+    │   ├── model_checks.py      <- Contains functions for the model checks       
+    │   └── sample.py            <- Contains functions to initialize and run the mcmc sampling
 ```
 
 --------
