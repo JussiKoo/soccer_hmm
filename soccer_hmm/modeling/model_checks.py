@@ -12,7 +12,7 @@ import scipy.stats as stats
 import pandas as pd
 import arviz as az
 
-from src.soccer_hmm.config import MODELS_DIR, PROCESSED_DATA_DIR
+from soccer_hmm.config import MODELS_DIR, PROCESSED_DATA_DIR
 
 app = typer.Typer()
 

@@ -17,7 +17,7 @@ from pathlib import Path
 #import yaml
 #from sklearn.cluster import KMeans
 
-from src.soccer_hmm.config import PROCESSED_DATA_DIR, STAN_DIR, MODELS_DIR
+from soccer_hmm.config import PROCESSED_DATA_DIR, STAN_DIR, MODELS_DIR
 
 def make_random_inits(template, n_states, rng):
     """Perturb the template inits randomly for one Pathfinder starting path."""
