@@ -38,7 +38,7 @@ def main(
     # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
     raw_data_path: Path = RAW_DATA_DIR,
     processed_data_path: Path = PROCESSED_DATA_DIR / "soccerdata_processed.csv",
-    stan_path: Path = STAN_DIR / "soccer_hmm_2.stan",
+    stan_path: Path = STAN_DIR / "soccer_hmm.stan",
     model_path: Path = MODELS_DIR / "default",
     load_chains: bool = False
     # -----------------------------------------
@@ -55,7 +55,7 @@ def main(
         cmdstanpy.cmdstan_path()
     except ValueError:
         logger.info("Installing CmdStanPy")
-        cmdstanpy.install_cmdstan()
+        cmdstanpy.install_cmdstan(overwrite=True, compiler=True)
 
     #==========================================================================================================
 
@@ -87,7 +87,8 @@ def main(
                 "std": processed_data["accelrate_cumulative_30s"].std()
         }
     }
-    else:    
+    else:
+        processed_data_path.parent.mkdir(parents=True, exist_ok=True)
         logger.info(f"Processed data not found. Processing raw data in {raw_data_path}")
         processed_data, scaling_params = process_raw_data(raw_data_path, processed_data_path)
 

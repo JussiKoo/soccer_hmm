@@ -586,7 +586,7 @@ def process_raw_data(input_path, output_path):
     df["position_id"] = pd.factorize(df["position"])[0]
 
     # Important: For testing with smaller dataset
-    #df = df[df["player_id"] == 18]
+    df = df[df["player_id"] == 18]
 
     mean_val = df["accelrate_cumulative_30s"].mean()
     std_val = df["accelrate_cumulative_30s"].std()

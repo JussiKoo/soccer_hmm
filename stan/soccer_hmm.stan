@@ -17,7 +17,6 @@ parameters {
     vector<lower=0>[N] sigma_speeds; // SD of gamma
     
     vector<lower=0>[N] mu_loads;
-    //positive_ordered[N] mu_loads; // mean of gamma - ordered
     vector<lower=0>[N] sigma_loads; // SD of gamma
 
     // unconstrained angle parameters
@@ -66,24 +65,20 @@ model {
     //log transition matrix
     //array[T] matrix[N,N] gamma;
     array[T] matrix[N,N] log_gamma;
-    array[T] matrix[N,N] log_gamma_tr;
+    //array[T] matrix[N,N] log_gamma_tr;
 
     // priors
-    mu_speeds[1] ~ normal(1, 2);
-    mu_speeds[2] ~ normal(2, 2);
-    mu_speeds[3] ~ normal(3, 2);
-    mu_speeds[4] ~ normal(4, 2);
-    mu_speeds[5] ~ normal(5, 2);
+    mu_speeds[1] ~ normal(0.25, 0.5);
+    mu_speeds[2] ~ normal(1.0, 0.5);
+    mu_speeds[3] ~ normal(1.75, 0.5);
+    mu_speeds[4] ~ normal(2.5, 0.5);
+    mu_speeds[5] ~ normal(3.25, 0.5);
     sigma_speeds ~ student_t(3, 0, 1);
     
-    mu_loads[1] ~ normal(1, 3);
-    mu_loads[2] ~ normal(3, 3);
-    mu_loads[3] ~ normal(5, 3);
-    mu_loads[4] ~ normal(7, 3);
-    mu_loads[5] ~ normal(9, 3);
+    mu_loads ~ normal(5, 5);
     sigma_loads ~ student_t(3, 0, 1);
 
-    xangle ~ normal(10, 3);
+    xangle ~ normal(5, 5);
 
     //turn angles are mostly near zero
     yangle ~ normal(0, 0.5);
@@ -112,26 +107,27 @@ model {
         }
     }
 
-    //transpose
-    for(t in 1:T)
-        for(i in 1:N)
-            for(j in 1:N)
-                log_gamma_tr[t,j,i] = log_gamma[t,i,j];
-
     //likelihood computation implemented with forward-algorithm
     for (t in 1:T) {
         // initialise forward variable if first obs of track or segment
-        if (t==1 || track_ID[t]!=track_ID[t-1] || segment_ID[t]!=segment_ID[t-1]) 
-            logp = rep_vector(-log(N), N); //initial state probs assumed uniform
+        if (t==1 || track_ID[t]!=track_ID[t-1] || segment_ID[t]!=segment_ID[t-1]) {
+            for (n in 1:N) {
+                logp[n] = -log(N);
 
-        for (n in 1:N) {
-            logptemp[n] = log_sum_exp(to_vector(log_gamma_tr[t,n]) + logp);
-            logptemp[n] = logptemp[n] + gamma_lpdf(speeds[t] | shape_speeds[n], rate_speeds[n]);
-            logptemp[n] = logptemp[n] + gamma_lpdf(loads[t] | shape_loads[n], rate_loads[n]);
-            logptemp[n] = logptemp[n] + von_mises_lpdf(angles[t] | loc[n], kappa[n]);
+                logp[n] += gamma_lpdf(speeds[t] | shape_speeds[n], rate_speeds[n]);
+                logp[n] += gamma_lpdf(loads[t] | shape_loads[n], rate_loads[n]);
+                logp[n] += von_mises_lpdf(angles[t] | loc[n], kappa[n]);
+            }
+        } else {
+            for (n in 1:N) {
+                logptemp[n] = log_sum_exp(to_vector(log_gamma[t, :, n]) + logp);
+                logptemp[n] = logptemp[n] + gamma_lpdf(speeds[t] | shape_speeds[n], rate_speeds[n]);
+                logptemp[n] = logptemp[n] + gamma_lpdf(loads[t] | shape_loads[n], rate_loads[n]);
+                logptemp[n] = logptemp[n] + von_mises_lpdf(angles[t] | loc[n], kappa[n]);
+            }
+
+            logp = logptemp;
         }
-
-        logp = logptemp;
 
         // add log forward variable to target at the end of each track or half
         if (t==T || track_ID[t+1]!=track_ID[t] || segment_ID[t+1]!=segment_ID[t]) 
@@ -182,11 +178,11 @@ generated quantities {
             if (t==1 || track_ID[t]!=track_ID[t-1] || segment_ID[t]!=segment_ID[t-1]) {
                 for(n in 1:N) {
                     real logp = 0;
-                    if(speeds[t]>0)
+                    if (speeds[t] > 0)
                         logp = logp + gamma_lpdf(speeds[t] | shape_speeds[n], rate_speeds[n]);
-                    if(loads[t]>0)
+                    if (loads[t] > 0)
                         logp = logp + gamma_lpdf(loads[t] | shape_loads[n], rate_loads[n]);
-                    if(angles[t]>(-pi()))
+                    if (angles[t] > (-pi()))
                         logp = logp + von_mises_lpdf(angles[t] | loc[n], kappa[n]);
                     back_ptr[t, n] = 1;
                     best_logp[t, n] = logp;
@@ -196,12 +192,12 @@ generated quantities {
                     best_logp[t, n] = negative_infinity();
                     for (j in 1:N) {
                         real logp = 0;
-                        logp = best_logp[t-1, j] + log_gamma[t,j,n]; //transition from state j to n
-                        if(speeds[t]>0)
+                        logp = best_logp[t-1, j] + log_gamma[t, j, n]; //transition from state j to n
+                        if (speeds[t] > 0)
                             logp = logp + gamma_lpdf(speeds[t] | shape_speeds[n], rate_speeds[n]);
-                        if(loads[t]>0)
+                        if (loads[t] > 0)
                             logp = logp + gamma_lpdf(loads[t] | shape_loads[n], rate_loads[n]);
-                        if(angles[t]>(-pi())) 
+                        if (angles[t] > (-pi())) 
                             logp = logp + von_mises_lpdf(angles[t] | loc[n], kappa[n]);                     
                         if (logp > best_logp[t, n]) {
                             back_ptr[t, n] = j;
@@ -219,7 +215,7 @@ generated quantities {
                 int argmax = 1;
                 for (n in 2:N)
                     if (best_logp[t, n] > max_logp) {
-                        max_logp = best_logp[t,n];
+                        max_logp = best_logp[t, n];
                         argmax = n;
                     }
                 viterbi[t] = argmax;

@@ -18,7 +18,7 @@ classifiers = [
 requires-python = ">=3.12"
 
 dependencies = [
-    "arviz",
+    "arviz==0.23.0",
     "arviz-stats",
     "cmdstanpy",
     "loguru",

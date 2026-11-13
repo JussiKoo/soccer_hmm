@@ -192,7 +192,7 @@ generated quantities {
                     best_logp[t, n] = negative_infinity();
                     for (j in 1:N) {
                         real logp = 0;
-                        logp = best_logp[t-1, j] + log_gamma[t,j,n]; //transition from state j to n
+                        logp = best_logp[t-1, j] + log_gamma[t, j, n]; //transition from state j to n
                         if (speeds[t] > 0)
                             logp = logp + gamma_lpdf(speeds[t] | shape_speeds[n], rate_speeds[n]);
                         if (loads[t] > 0)
