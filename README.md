@@ -13,7 +13,8 @@ python -m pip install .
 ```
 
 This installs the `soccer-hmm` command and the package's Python dependencies,
-including CmdStanPy. You do not need to install CmdStanPy separately.
+including CmdStanPy. You still need to install the CmdStan toolchain separately
+for model fitting.
 
 Or build distributable wheel and source archives with:
 
