@@ -5,12 +5,15 @@ model.
 
 ## Install
 
-Python 3.12 or newer is required. Install the package and its Python
-dependencies into an environment with:
+Python 3.12 or newer is required. From the repository root, activate the
+Python environment you want to use, then install the package:
 
 ```bash
 python -m pip install .
 ```
+
+This installs the `soccer-hmm` command and the package's Python dependencies,
+including CmdStanPy. You do not need to install CmdStanPy separately.
 
 Or build distributable wheel and source archives with:
 
@@ -19,14 +22,66 @@ uv build --wheel
 uv build --sdist
 ```
 
+### Install CmdStan
+
+CmdStanPy is the Python interface; fitting models also requires the CmdStan
+program and a C++ build toolchain. Install them once, using the same Python
+environment that provides `soccer-hmm`. On Windows, run:
+
+```powershell
+python -c "import cmdstanpy; cmdstanpy.install_cmdstan(compiler=True)"
+```
+
+On Linux or macOS, install the required C++ compiler and `make` for your
+platform, then run:
+
+```bash
+python -c "import cmdstanpy; cmdstanpy.install_cmdstan()"
+```
+
+Check which Python environment and CmdStan installation are being used with:
+
+```bash
+python -c "import sys, cmdstanpy; print(sys.executable); print(cmdstanpy.cmdstan_path())"
+```
+
+The CLI only attempts to install CmdStan when it cannot find an existing
+installation. If CmdStan is already present but compilation reports that
+`mingw32-make` cannot be found on Windows, the toolchain may be installed but
+its executable directories are not on the current terminal's `PATH`. With the
+default CmdStanPy installation location, add them to the current PowerShell
+session with:
+
+```powershell
+$toolchain = Join-Path $env:USERPROFILE ".cmdstan\RTools40"
+$env:PATH = "$toolchain\mingw64\bin;$toolchain\usr\bin;$env:PATH"
+where.exe mingw32-make
+where.exe g++
+```
+
+In Command Prompt, use:
+
+```bat
+set "RTOOLS=%USERPROFILE%\.cmdstan\RTools40"
+set "PATH=%RTOOLS%\mingw64\bin;%RTOOLS%\usr\bin;%PATH%"
+where mingw32-make
+where g++
+```
+
+Both `where.exe` commands should print executable paths. Run `soccer-hmm` from
+that same terminal session. If CmdStanPy installed RTools to a different
+location, use that location instead of the default `RTools40` path above.
+
+See the [CmdStanPy installation guide](https://mc-stan.org/cmdstanpy/installation.html)
+for platform-specific requirements.
+
+### Check the command
+
 The package provides a command-line interface:
 
 ```bash
 soccer-hmm --help
 ```
-
-CmdStan is required for fitting a model. `cmdstanpy` can install it on the
-first run if it is not already available.
 
 ## Run an experiment
 

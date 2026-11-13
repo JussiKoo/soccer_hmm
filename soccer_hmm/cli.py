@@ -49,14 +49,6 @@ def main(
     aspect_ratio = 1/3
     scale=2.0
 
-    #Install cmdstanpy if not installed
-
-    try:
-        cmdstanpy.cmdstan_path()
-    except ValueError:
-        logger.info("Installing CmdStanPy")
-        cmdstanpy.install_cmdstan(overwrite=True, compiler=True)
-
     #==========================================================================================================
 
     #Instantiate a stan model from a stan-file.
