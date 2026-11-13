@@ -10,7 +10,7 @@ from scipy.stats import zscore
 from scipy.signal import butter, filtfilt
 from datetime import datetime
 
-from src.soccer_hmm.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
+from soccer_hmm.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
 
 app = typer.Typer()
 

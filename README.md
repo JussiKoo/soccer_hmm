@@ -1,31 +1,50 @@
 # soccer_hmm
 
-<a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
-    <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
-</a>
+Soccer players' external-load profile analysis with a Bayesian hidden Markov
+model.
 
-Soccer players external load profile analysis with hidden Markov models
+## Install
 
-## Getting Started
-
-### 1. Set up the environment
+Python 3.12 or newer is required. Install the package and its Python
+dependencies into an environment with:
 
 ```bash
-conda env create -f environment.yml
-conda activate hmm
+python -m pip install .
 ```
 
-### 2. Project layout
+Or build distributable wheel and source archives with:
 
-| Path | Contents | CLI argument |
-|------|----------|--------------|
-| `data/raw/` | Raw data files (`.csv`) | `-raw_data_path` |
-| `stan/` | Stan model files | `-stan_path` |
-| `models/<your_model>/` | Directory containing a `config.yaml` | `-model_path` |
+```bash
+uv build --wheel
+uv build --sdist
+```
 
-### 3. Configure the model
+The package provides a command-line interface:
 
-Each directory under `models/` needs a `config.yaml`. Example:
+```bash
+soccer-hmm --help
+```
+
+CmdStan is required for fitting a model. `cmdstanpy` can install it on the
+first run if it is not already available.
+
+## Run an experiment
+
+The package includes the default Stan model, but not player tracking data,
+model outputs, or experiment configuration. Prepare a workspace with raw CSV
+files and a model directory containing `config.yaml`, then pass their paths:
+
+```bash
+soccer-hmm \
+  --raw-data-path "data/raw/your_data" \
+  --processed-data-path "data/processed/soccerdata_processed.csv" \
+  --model-path "models/your_model"
+```
+
+Use `--stan-path` to select a different Stan model.
+
+The model configuration must define the state count, sampling settings, and
+random seed. For example:
 
 ```yaml
 model:
@@ -39,42 +58,17 @@ sampling:
 rng_seed: 42
 ```
 
-### 4. Run an experiment
+The same paths are used by the `python -m soccer_hmm` command and the
+`run_experiment.py` compatibility script. By default, project data, Stan
+models, and experiment outputs are resolved relative to the current working
+directory. Set `SOCCER_HMM_PROJECT_DIR` to use another project workspace.
 
-From the project root:
+## Python API
 
-```bash
-python run_experiment.py \
-  -raw_data_path "data/raw/your_data" \
-  -stan_path "stan/soccer_hmm_2.stan" \
-  -model_path "models/your_model"
+The `soccer_hmm` package includes data processing, modeling, diagnostics, and
+plotting modules:
+
+```python
+from soccer_hmm.dataset import process_raw_data
+from soccer_hmm.modeling.sample import fit_hmm
 ```
-
-## Project Organization
-
-```
-├── LICENSE            <- Open-source license if one is chosen
-├── README.md          <- The top-level README for developers using this project.
-├── data
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
-├── models             <- MCMC sampling results for the experiments
-├── notebooks          <- Jupyter notebooks
-├── stan               <- Stan code files
-├── pyproject.toml     <- Project configuration file with package metadata for soccer_hmm and configuration for tools like black
-├── environment.yml    <- The requirements file for reproducing the analysis environment
-├── run_experiment.py  <- The script to run a single HMM experiment using the configurations in the models directory
-└── src/soccer_hmm   <- Source code for use in this project.
-    │
-    ├── __init__.py             <- Makes soccer_hmm a Python module
-    ├── config.py               <- Store useful variables and configuration
-    ├── dataset.py              <- Contains functions for preprocessing the raw data
-    ├── plots.py                <- Contains functions for plotting
-    ├── modeling
-        │        
-        ├── model_checks.py      <- Contains functions for the model checks       
-        └── sample.py            <- Contains functions to initialize and run the mcmc sampling
-```
-
---------
-

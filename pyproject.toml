@@ -1,11 +1,11 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["uv_build >= 0.13, <0.14"]
+build-backend = "uv_build"
 
 [project]
 name = "soccer_hmm"
 version = "0.0.1"
-description = "Soccer players external load profile analysis with HMM's"
+description = "Multivariate Bayesian HMM for tracking data"
 authors = [
   { name = "Jussi Kauppinen" },
 ]
@@ -15,18 +15,39 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License"
 ]
-requires-python = "~=3.12"
+requires-python = ">=3.12"
 
+dependencies = [
+    "arviz",
+    "arviz-stats",
+    "cmdstanpy",
+    "loguru",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "python-dotenv",
+    "PyYAML",
+    "scipy",
+    "scienceplots",
+    "seaborn",
+    "statsmodels",
+    "tqdm",
+    "typer",
+]
 
-[tool.ruff]
-line-length = 99
-src = ["soccer_hmm"]
-include = ["pyproject.toml", "soccer_hmm/**/*.py"]
+[project.scripts]
+soccer-hmm = "soccer_hmm.cli:app"
 
-[tool.ruff.lint]
-extend-select = ["I"]  # Add import sorting
-
-[tool.ruff.lint.isort]
-known-first-party = ["soccer_hmm"]
-force-sort-within-sections = true
-
+[tool.uv.build-backend]
+module-name = "soccer_hmm"
+module-root = "."
+source-exclude = [
+    ".env",
+    ".venv/**",
+    "build/**",
+    "data/**",
+    "dist/**",
+    "models/**",
+    "notebooks/**",
+    "stan/**/*.exe",
+]
