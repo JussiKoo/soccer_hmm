@@ -46,8 +46,7 @@ Check which Python environment and CmdStan installation are being used with:
 python -c "import sys, cmdstanpy; print(sys.executable); print(cmdstanpy.cmdstan_path())"
 ```
 
-The CLI only attempts to install CmdStan when it cannot find an existing
-installation. If CmdStan is already present but compilation reports that
+If CmdStan is already present but compilation reports that
 `mingw32-make` cannot be found on Windows, the toolchain may be installed but
 its executable directories are not on the current terminal's `PATH`. With the
 default CmdStanPy installation location, add them to the current PowerShell
