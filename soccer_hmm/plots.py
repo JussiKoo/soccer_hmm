@@ -20,7 +20,7 @@ from matplotlib.ticker import MultipleLocator
 from statsmodels.tsa.stattools import acf
 from scipy.stats import circmean
 
-from src.soccer_hmm.config import FIGURES_DIR, PROCESSED_DATA_DIR
+from soccer_hmm.config import FIGURES_DIR, PROCESSED_DATA_DIR
 
 app = typer.Typer()
 
